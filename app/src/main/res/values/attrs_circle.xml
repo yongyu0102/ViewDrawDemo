@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--声明一个自定义属性集合，这这个集合里面可以有多个自定义属性-->
+    <declare-styleable name="MyCircleView">
+        <!--自定义一个颜色属性-->
+        <attr name="circle_color" format="color"/>
+        <!--自定义一个输入文字属性-->
+        <attr name="circle_text" format="string"/>
+<!--其他属性根据需要进行选择-->
+    </declare-styleable>
+</resources>
