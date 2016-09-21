@@ -95,6 +95,12 @@ public class MyCircleView extends View {
         }
     }
 
+    /**
+     * 这里进行绘制 View 的内容，这里要注意需要处理 padding 值，
+     * 让自定义的 View 支持 padding 属性，如果不处理， 那么在 xml 文件中使用该自定义的 View padding
+     * 属性时候，将会失效
+     * @param canvas 画布
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
