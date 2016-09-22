@@ -49,6 +49,11 @@ public class HorizontalScrollViewEx extends ViewGroup {
         }
     }
 
+    /**
+     * 解决滑动冲突
+     * @param event 点击事件
+     * @return 表明事件是否被拦截
+     */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         boolean intercepted = false;
@@ -91,6 +96,11 @@ public class HorizontalScrollViewEx extends ViewGroup {
         return intercepted;
     }
 
+    /**
+     * 进行滑动处理
+     * @param event 点击事件
+     * @return 表明是否消费
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mVelocityTracker.addMovement(event);
@@ -133,47 +143,72 @@ public class HorizontalScrollViewEx extends ViewGroup {
         return true;
     }
 
+    /**
+     * 重写 onMeasure 方法，处理自定义 View 支持 wrap_content 模式
+     * @param widthMeasureSpec 父容器给定宽度约束条件
+     * @param heightMeasureSpec 父容器给定高度约束条件
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int measuredWidth = 0;
         int measuredHeight = 0;
+        //获取子视图个数
         final int childCount = getChildCount();
+        //测量子视图
         measureChildren(widthMeasureSpec, heightMeasureSpec);
-
+        //获取父容器给定获取测量模式和测量值
         int widthSpaceSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightSpaceSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
         if (childCount == 0) {
+            //如果没有子视图直接设定 View 的宽/高为0
             setMeasuredDimension(0, 0);
         } else if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
+            //如果视图宽/高都采用 wrap_content 模式
             final View childView = getChildAt(0);
+            //宽度为第一个视图宽度乘以所有子视图个数
             measuredWidth = childView.getMeasuredWidth() * childCount;
+           // 那么高度为第一个视图宽度
             measuredHeight = childView.getMeasuredHeight();
+            //设置 自定义视图宽/高值
             setMeasuredDimension(measuredWidth, measuredHeight);
         } else if (heightSpecMode == MeasureSpec.AT_MOST) {
+            //如果只有视图高采用 wrap_content 模式
             final View childView = getChildAt(0);
+            //设置视图高度为第一个视图高度
             measuredHeight = childView.getMeasuredHeight();
             setMeasuredDimension(widthSpaceSize, childView.getMeasuredHeight());
         } else if (widthSpecMode == MeasureSpec.AT_MOST) {
+            //如果视图宽度使用 wrap_content 模式，设置宽度为第一个视图宽度乘以所有子视图个数
             final View childView = getChildAt(0);
             measuredWidth = childView.getMeasuredWidth() * childCount;
             setMeasuredDimension(measuredWidth, heightSpaceSize);
         }
     }
 
+    /**
+     * 重写 onLayout 方法，实现摆放子视图功能
+     */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        //记录子视图左边距位置
         int childLeft = 0;
+        //获取子视图个数
         final int childCount = getChildCount();
+        //记录子视图个数
         mChildrenSize = childCount;
-
+        //遍历子视图
         for (int i = 0; i < childCount; i++) {
+            //获取子视图
             final View childView = getChildAt(i);
             if (childView.getVisibility() != View.GONE) {
+                //如果子视图可见，获取子视图测量宽度
                 final int childWidth = childView.getMeasuredWidth();
+                //记录子视图宽度
                 mChildWidth = childWidth;
+                //设置摆放子视图位置，每次子视图放置在上一个子视图右边依次排放
                 childView.layout(childLeft, 0, childLeft + childWidth,
                         childView.getMeasuredHeight());
                 childLeft += childWidth;
