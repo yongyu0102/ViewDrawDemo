@@ -8,7 +8,11 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Scroller;
-
+/**
+ * description: 实现水平方向的 ViewPaper 功能
+ * author：pz
+ * 时间：2016/12/8 :22:57
+ */
 public class HorizontalScrollViewEx extends ViewGroup {
     private static final String TAG = "HorizontalScrollViewEx";
 
