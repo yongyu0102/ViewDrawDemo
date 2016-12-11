@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -13,7 +14,9 @@ import android.view.View;
  * Created by zhangpeng on 2016/12/7.
  */
 public class DrawViewWithPaint extends View {
+    private Paint mPaint00;
     private Paint mPaint100;
+    private Paint mPaint80;
     private Rect rect100;
     private Paint mPaint200;
     private Rect rect200;
@@ -36,11 +39,20 @@ public class DrawViewWithPaint extends View {
     private void init() {
         mPaint100 = new Paint();
         mPaint100.setColor(Color.BLUE);
+        //这里的 100,200为相当于当前绘制 View 的坐标值，值单位为像素，坐标原点
+        //如果当前画布没有进行移动坐标原点为当前 View 的左上角
+
         rect100 = new Rect(100, 100, 200, 200);
 
         mPaint200=new Paint();
         mPaint200.setColor(Color.RED);
-        rect200=new Rect(150,150,150,150);
+        rect200=new Rect(200,200,400,400);
+
+        mPaint00=new Paint();
+        mPaint00.setColor(Color.GREEN);
+
+        mPaint80=new Paint();
+        mPaint80.setColor(Color.YELLOW);
     }
 
 
@@ -80,9 +92,23 @@ public class DrawViewWithPaint extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawRect(rect100,mPaint100);
-        canvas.translate(-50,-50);
-        canvas.drawRect(rect200,mPaint200);
-        canvas.drawText("你好打完少",100,100,mPaint200);
+//        canvas.drawRect(rect100,mPaint100);
+        canvas.drawRect(0,0,100,100,mPaint00);
+//        canvas.translate(-50,-50);
+//        canvas.drawRect(rect200,mPaint200);
+//        这里的 100,200为相当于当前绘制 View 的坐标值，值单位为像素，
+//        如果当前画布没有进行移动,坐标原点(0,0)为当前 View 的左上角
+        canvas.drawRect(100,100,200,200,mPaint100);
+
+        canvas.drawRect(200,200,400,400,mPaint200);
+// canvas 画布大小与给定当前绘制的 view 的大小相等
+        //将当前画布坐标原点移动至 100，200 位置
+        canvas.translate(100,100);
+        Log.d("DrawViewWithPaint",canvas.getWidth()+","+ canvas.getHeight()+"");
+
+        //此时绘制view 的y 轴坐标点100，实际位置相当于 200+100 在 300的位置
+        canvas.drawRect(0,0,100,200,mPaint00);
+        canvas.drawRect(-100,-100,200,300,mPaint80);
+//        canvas.drawText("你好打完少",100,100,mPaint200);
     }
 }

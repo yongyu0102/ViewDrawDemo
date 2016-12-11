@@ -28,6 +28,8 @@ public class PieView extends View {
     private int mWidth, mHeight;
     // 画笔
     private Paint mPaint = new Paint();
+    //定义距离绘制区域用于绘制
+    private  RectF rect = new RectF();
 
     public PieView(Context context) {
         this(context, null);
@@ -93,17 +95,18 @@ public class PieView extends View {
             return;
         // 当前起始角度
         float currentStartAngle = mStartAngle;
-        // 将画布坐标原点移动到中心位置
+        // 将画布坐标原点移动到 view 的中心位置
         canvas.translate(mWidth / 2, mHeight / 2);
-        // 确定饼状图半径
+        // 确定饼状图半径，饼状图半径为整个 view 的 0.8 倍，这样画出来的饼状图距离边缘 0.2 倍的距离
         float r = (float) (Math.min(mWidth, mHeight) / 2 * 0.8);
         // 饼状图绘制区域
-        RectF rect = new RectF(-r, -r, r, r);
+        rect.set(-r, -r, r, r);
 
         for (int i = 0; i < mData.size(); i++) {
             PieData pie = mData.get(i);
             mPaint.setColor(pie.getColor());
             //绘制扇形，通过绘制区域 rect 其实角度 currentStartAngle 结束角度 pie.getAngle()
+            //传入参数为 绘制区域、开始角度、结束角度、以原点为中心、画笔
             canvas.drawArc(rect, currentStartAngle, pie.getAngle(), true, mPaint);
             //改变角度
             currentStartAngle += pie.getAngle();

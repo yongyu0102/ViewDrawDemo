@@ -7,10 +7,22 @@
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
+    <!--饼状图-->
     <com.example.zhangpeng.viewdrawdemo.view.PieView
         android:id="@+id/pie_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <!--坐标点相对位置练习-->
+    <!--<com.example.zhangpeng.viewdrawdemo.view.DrawViewWithPaint-->
+        <!--android:layout_width="400px"-->
+        <!--android:layout_height="400px"-->
+        <!--android:id="@+id/drawViewWithPaint" />-->
+    <!--画布 Canvas 练习-->
+    <com.example.zhangpeng.viewdrawdemo.view.CanvasUseModelView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/canvasUseModelView" />
 
 
 </LinearLayout>
