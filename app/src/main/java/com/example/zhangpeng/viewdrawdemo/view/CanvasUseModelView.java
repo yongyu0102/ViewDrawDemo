@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Picture;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -60,6 +63,8 @@ public class CanvasUseModelView extends View {
         mPaint = new Paint();
         mPaint.setColor(Color.BLACK);
         rect = new Rect();
+
+        recording();    // 调用录制
     }
 
 
@@ -94,9 +99,50 @@ public class CanvasUseModelView extends View {
         }
     }
 
+    /**
+     * 使用 Picture 进行对 canvas 录制
+     */
+    // 1.创建Picture
+    private Picture mPicture = new Picture();
+    // 2.录制内容方法
+    private void recording() {
+        // 开始录制 (接收返回值Canvas)
+        Canvas canvas = mPicture.beginRecording(500, 500);
+        // 创建一个画笔
+        Paint paint = new Paint();
+        paint.setColor(Color.BLUE);
+        paint.setStyle(Paint.Style.FILL);
+
+        // 在Canvas中具体操作
+        // 位移
+        canvas.translate(250,250);
+        // 绘制一个圆
+        canvas.drawCircle(0,0,80,paint);
+
+        mPicture.endRecording();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.drawPicture(mPicture,new RectF(0,0,mPicture.getWidth(),mPicture.getHeight()));
+    }
+
+    private void rotateTest03(Canvas canvas) {
+        // 将坐标系原点移动到画布正中心
+        canvas.translate(getWidth() / 2, getHeight() / 2);
+        mPaint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(0,0,getWidth() / 2-80,mPaint);          // 绘制两个圆形
+        canvas.drawCircle(0,0,getWidth() / 2-110,mPaint);
+
+        for (int i=0; i<=360; i+=10){               // 绘制圆形之间的连接线
+            //从竖直方向开始逐渐偏移10度逐一划线
+            canvas.drawLine(0,getWidth() / 2-80,0,getWidth() / 2-110,mPaint);
+            canvas.rotate(10);
+        }
+    }
+
+    private void rotateTest02(Canvas canvas) {
         // 将坐标系原点移动到画布正中心
         canvas.translate(getWidth() / 2, getHeight() / 2);
 

@@ -10,8 +10,8 @@
     <!--饼状图-->
     <com.example.zhangpeng.viewdrawdemo.view.PieView
         android:id="@+id/pie_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <!--坐标点相对位置练习-->
     <!--<com.example.zhangpeng.viewdrawdemo.view.DrawViewWithPaint-->
