@@ -1,8 +1,11 @@
 package com.example.zhangpeng.viewdrawdemo.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Picture;
 import android.graphics.Rect;
@@ -10,6 +13,9 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Canvas 画布使用练习
@@ -27,22 +33,26 @@ public class CanvasUseModelView extends View {
     private Rect rect200;
     private Rect rect;
 
+    private Bitmap bitmap;
+    private Context context;
+
     public CanvasUseModelView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public CanvasUseModelView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public CanvasUseModelView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
+        this.context = context;
         mPaint100 = new Paint();
         mPaint100.setColor(Color.BLUE);
         //这里的 100,200为相当于当前绘制 View 的坐标值，值单位为像素，坐标原点
@@ -65,6 +75,20 @@ public class CanvasUseModelView extends View {
         rect = new Rect();
 
         recording();    // 调用录制
+        //从已有图片获取 bitmap
+        getBitMap();
+    }
+
+    private void getBitMap() {
+        try {
+            InputStream inputStream = context.getAssets().open("canvas02.png");
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
     }
 
 
@@ -104,6 +128,7 @@ public class CanvasUseModelView extends View {
      */
     // 1.创建Picture
     private Picture mPicture = new Picture();
+
     // 2.录制内容方法
     private void recording() {
         // 开始录制 (接收返回值Canvas)
@@ -115,9 +140,9 @@ public class CanvasUseModelView extends View {
 
         // 在Canvas中具体操作
         // 位移
-        canvas.translate(250,250);
+        canvas.translate(250, 250);
         // 绘制一个圆
-        canvas.drawCircle(0,0,80,paint);
+        canvas.drawCircle(0, 0, 80, paint);
 
         mPicture.endRecording();
     }
@@ -125,19 +150,40 @@ public class CanvasUseModelView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawPicture(mPicture,new RectF(0,0,mPicture.getWidth(),mPicture.getHeight()));
+        // drawPictrue 使用
+//        canvas.drawPicture(mPicture,new RectF(0,0,mPicture.getWidth(),mPicture.getHeight()));
+        //将 bitmap 绘制到 canvas 上进行显示，从左上角开始
+//        canvas.drawBitmap(bitmap,new Matrix(),new Paint());
+
+        //指定距离左上角坐标原点距离
+//        canvas.drawBitmap(bitmap,200,500,new Paint());
+        drawBitmapPart(canvas);
+    }
+
+    private void drawBitmapPart(Canvas canvas) {
+        // 将画布坐标系移动到画布中央
+        canvas.translate(getWidth() / 2, getHeight() / 2);
+
+// 指定图片绘制区域(左上角的四分之一)
+        Rect src = new Rect(0, 0, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+
+// 指定图片在屏幕上显示的区域
+        Rect dst = new Rect(0, 0, 200, 400);
+
+// 绘制图片
+        canvas.drawBitmap(bitmap, src, dst, null);
     }
 
     private void rotateTest03(Canvas canvas) {
         // 将坐标系原点移动到画布正中心
         canvas.translate(getWidth() / 2, getHeight() / 2);
         mPaint.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(0,0,getWidth() / 2-80,mPaint);          // 绘制两个圆形
-        canvas.drawCircle(0,0,getWidth() / 2-110,mPaint);
+        canvas.drawCircle(0, 0, getWidth() / 2 - 80, mPaint);          // 绘制两个圆形
+        canvas.drawCircle(0, 0, getWidth() / 2 - 110, mPaint);
 
-        for (int i=0; i<=360; i+=10){               // 绘制圆形之间的连接线
+        for (int i = 0; i <= 360; i += 10) {               // 绘制圆形之间的连接线
             //从竖直方向开始逐渐偏移10度逐一划线
-            canvas.drawLine(0,getWidth() / 2-80,0,getWidth() / 2-110,mPaint);
+            canvas.drawLine(0, getWidth() / 2 - 80, 0, getWidth() / 2 - 110, mPaint);
             canvas.rotate(10);
         }
     }
@@ -149,12 +195,12 @@ public class CanvasUseModelView extends View {
         rect.set(0, -400, 400, 0);   // 矩形区域
 
         mPaint.setColor(Color.BLACK);           // 绘制黑色矩形
-        canvas.drawRect(rect,mPaint);
+        canvas.drawRect(rect, mPaint);
 
-        canvas.rotate(180,200,0);               // 旋转180度 <-- 旋转中心向右偏移200个单位
+        canvas.rotate(180, 200, 0);               // 旋转180度 <-- 旋转中心向右偏移200个单位
 
         mPaint.setColor(Color.BLUE);            // 绘制蓝色矩形
-        canvas.drawRect(rect,mPaint);
+        canvas.drawRect(rect, mPaint);
     }
 
     private void rotateTest01(Canvas canvas) {
@@ -164,12 +210,12 @@ public class CanvasUseModelView extends View {
         rect.set(0, -400, 400, 0);   // 矩形区域
 
         mPaint.setColor(Color.BLACK);           // 绘制黑色矩形
-        canvas.drawRect(rect,mPaint);
+        canvas.drawRect(rect, mPaint);
 
         canvas.rotate(180);                     // 旋转180度 <-- 默认旋转中心为原点
 
         mPaint.setColor(Color.BLUE);            // 绘制蓝色矩形
-        canvas.drawRect(rect,mPaint);
+        canvas.drawRect(rect, mPaint);
     }
 
     private void scaleTest05(Canvas canvas) {

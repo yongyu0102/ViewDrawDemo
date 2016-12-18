@@ -51,6 +51,7 @@ public class HorizontalScrollViewEx extends ViewGroup {
             mScroller = new Scroller(getContext());
             mVelocityTracker = VelocityTracker.obtain();
         }
+
     }
 
     /**

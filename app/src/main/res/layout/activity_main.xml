@@ -12,6 +12,16 @@
         android:id="@+id/pie_view"
         android:layout_width="50dp"
         android:layout_height="50dp" />
+    <Button
+        android:id="@+id/btn_checked"
+    android:text="选择"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_unchecked"
+        android:text="不选择"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <!--坐标点相对位置练习-->
     <!--<com.example.zhangpeng.viewdrawdemo.view.DrawViewWithPaint-->
@@ -19,10 +29,19 @@
         <!--android:layout_height="400px"-->
         <!--android:id="@+id/drawViewWithPaint" />-->
     <!--画布 Canvas 练习-->
-    <com.example.zhangpeng.viewdrawdemo.view.CanvasUseModelView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/canvasUseModelView" />
+    <!--<com.example.zhangpeng.viewdrawdemo.view.CanvasUseModelView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/canvasUseModelView" />-->
+    <!--自定义选择按钮动画-->
+    <com.example.zhangpeng.viewdrawdemo.view.CheckView
+        android:id="@+id/check_view"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
+    <com.example.zhangpeng.viewdrawdemo.view.RemoteControlMenu
+        android:id="@+id/remote_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>
